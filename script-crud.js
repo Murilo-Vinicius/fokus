@@ -53,23 +53,28 @@ const criarElementoTarefe = (tarefa) => {
   li.append(paragrafo);
   li.append(botao);
 
-  li.onclick = () => {
-    document
-      .querySelectorAll(".app__section-task-list-item-active")
-      .forEach((elemento) => {
-        elemento.classList.remove("app__section-task-list-item-active");
-      });
-    if (tarefaSelecionada == tarefa) {
-      paragrafoDescricaoTarefa.textContent = "";
-      tarefaSelecionada = null;
-      liTarefaSelecionada = null;
-      return;
-    }
-    tarefaSelecionada = tarefa;
-    liTarefaSelecionada = li;
-    paragrafoDescricaoTarefa.textContent = tarefa.descricao;
-    li.classList.add("app__section-task-list-item-active");
-  };
+  if (tarefa.completa) {
+    li.classList.add("app__section-task-list-item-complete");
+    botao.setAttribute("disabled", "true");
+  } else {
+    li.onclick = () => {
+      document
+        .querySelectorAll(".app__section-task-list-item-active")
+        .forEach((elemento) => {
+          elemento.classList.remove("app__section-task-list-item-active");
+        });
+      if (tarefaSelecionada == tarefa) {
+        paragrafoDescricaoTarefa.textContent = "";
+        tarefaSelecionada = null;
+        liTarefaSelecionada = null;
+        return;
+      }
+      tarefaSelecionada = tarefa;
+      liTarefaSelecionada = li;
+      paragrafoDescricaoTarefa.textContent = tarefa.descricao;
+      li.classList.add("app__section-task-list-item-active");
+    };
+  }
 
   return li;
 };
@@ -103,5 +108,7 @@ document.addEventListener("FocoFinalizado", () => {
     liTarefaSelecionada
       .querySelector("button")
       .setAttribute("disabled", "true");
+    tarefaSelecionada.completa = true;
+    atualizarTarefas();
   }
 });
